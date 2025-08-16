@@ -1,0 +1,10 @@
+<span id="a">root@francispham</span>:<span id="b">~</span><span id="c">$</span> cd ./aboutme
+<span id="a">root@francispham</span>:<span id="b">~</span><span id="c">$</span> cat profile.txt
+
+Hi there, my name is <span id="k">Francis Pham</span>!
+I am a student at Cornell University studying Electrical & Computer Engineering and Computer Science. 
+
+Quick links:
+- <a href="https://github.com/fpham0701" target="_blank"><i class='fab fa-github white'></i> GitHub</a>
+- <a href="https://linkedin.com/in/francispham-" target="_blank"><i class='fab fa-linkedin-in white'></i> LinkedIn</a>
+- <a href="mailto:fdp25@cornell.edu" target="_blank"><i class='fas fa-envelope white'></i> Email</a>
