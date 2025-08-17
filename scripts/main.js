@@ -17,9 +17,10 @@ const TITLE_ICON_CLASSES = [
   'fas fa-terminal',
   'fas fa-code',
   'fas fa-bolt',
-  'fas fa-laptop-code',
+  'fas fa-tv',
   'fas fa-bug',
   'far fa-keyboard',
+  'fas fa-headphones',
 ];
 
 // get startup text from file
@@ -62,6 +63,7 @@ function stopStartupTyping() {
 
 // track last printed command to avoid duplicate outputs
 let lastOutputKey = null;
+let experienceClicked = false;
 // track whether help was requested during startup
 let helpClickedEarly = false;
 
@@ -149,7 +151,7 @@ async function open_terminal() {
   await delay(250);
   createText("Welcome!");
   await delay(500);
-  createText('Type <a href="#" class="blue cmd" data-cmd="help">\'help\'</a> to see available commands.');
+  createText('Type <a href="#" class="blue cmd" data-cmd="help">help</a> to see available commands.');
   await delay(500);
 
   // auto-typing block with links from text file
@@ -233,11 +235,13 @@ async function getInputValue() {
   if (value.length === 0) {
     return;
   }
-  handleCommand(value);
+  handleTypeOfCommand(value);
 }
 
-//  ===== Available Commands =====
 
+// ======================================
+// ===== Available General Commands =====
+// ======================================
 // help
 function help_command() {
   createCode('<a href="#" class="blue cmd" data-cmd="whoami">whoami</a>', "About me.");
@@ -265,7 +269,9 @@ function projects_command() {
 
 // experience
 function experience_command() {
-  createCode('<a href="#" class="blue cmd" data-cmd="nvidia2025">NVIDIA</a>', "About me.");
+  createCode('<a href="#" class="blue cmd" data-cmd="nvidia25">nvidia25</a>', "Summer 2025 Software Engineering Intern at NVIDIA");
+  createCode('<a href="#" class="blue cmd" data-cmd="nvidia24">nvidia24</a>', "Summer 2024 Software Engineering Intern at NVIDIA");
+
 
   lastOutputKey = 'experience';
 }
@@ -291,15 +297,35 @@ function clear_command() {
   renderCommandsList();
 }
 
-// Central command handler (used by keyboard and clickable commands)
+
+// =====================================
+// ======== Experience Commands ========
+// =====================================
+function nvidia25_expCommand() {
+  createText("<i class='fas fa-laptop-code'></i> NVIDIA (May 2025 -- Aug 2025):");
+  createText("For this summer at NVIDIA, I worked on creating a LLM-driven, coverage-guided fuzzer used to find bugs in different compiler spaces. \
+              This tool was used by various groups and was helpful in finding errors in development code.")
+  lastOutputKey = 'nvidia25';
+}
+
+
+function nvidia24_expCommand() {
+  createText("<i class='fa-solid fa-computer'></i> NVIDIA (May 2024 -- Aug 2024):");
+  createText("For this summer at NVIDIA, I had the chance to work with the compiler verification team to help integrate the verification flow for MLIR (Multi-Level Intermediate Representation). \
+              I mainly worked on the automated testing pipeline for the NVVM Dialect, in order to collect performance metrics for compilation as well as improved functionality testing.")
+  lastOutputKey = 'nvidia24';
+}
+
+// ======================================
+// ========== Command Handlers ==========
+// ======================================
+// central command handler
 function handleCommand(value) {
-  delay(startup.speed); 
   if (value === "help") {
     if (lastOutputKey === 'help') return;
     trueValue(value);
     help_command();
     lastOutputKey = 'help';
-    // also render clickable list (no-op if already present)
     ensurePromptAtBottom();
     return;
   }
@@ -319,8 +345,9 @@ function handleCommand(value) {
   }
   if (value == "experience") {
     if (lastOutputKey == 'experience') return;
-    trueValue(value)
+    trueValue(value);
     experience_command();
+    experienceClicked = true;
     ensurePromptAtBottom();
     return;
   }
@@ -338,9 +365,40 @@ function handleCommand(value) {
   }
   falseValue(value);
   lastOutputKey = null;
-  createText(`command not found: ${value}. Type <a href="#" class="blue cmd" data-cmd="help">\'help\'</a> to see available commands.`);
+  createText(`command not found: ${value}. Type <a href="#" class="blue cmd" data-cmd="help">help</a> to see available commands.`);
   ensurePromptAtBottom();
 }
+
+// experience command handler
+function handleExperienceCommand(value) {
+  if (value == "nvidia25") {
+    if (lastOutputKey === 'nvidia25') return;
+    trueValue(value);
+    nvidia25_expCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value == "nvidia24") {
+    if (lastOutputKey === 'nvidia24') return;
+    trueValue(value);
+    nvidia24_expCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+
+  experienceClicked = false;
+  handleCommand(value);
+}
+
+// type of command handler (central, experience, projects)
+function handleTypeOfCommand(value) {
+  if (experienceClicked) {
+    handleExperienceCommand(value);
+  }
+  else {
+    handleCommand(value);
+  }}
+
 
 // clickable command list in blue, appended after startup
 function renderCommandsList() {
@@ -350,7 +408,7 @@ function renderCommandsList() {
   container.innerHTML = `Available commands: 
     <a href="#" class="blue cmd" data-cmd="whoami">whoami</a>
     <a href="#" class="blue cmd" data-cmd="projects">projects</a>
-    <a href="#" class="blue cmd" data-cmd="experience">experiences</a>
+    <a href="#" class="blue cmd" data-cmd="experience">experience</a>
     <a href="#" class="blue cmd" data-cmd="contact">contact</a>
     <a href="#" class="blue cmd" data-cmd="help">help</a>
     <a href="#" class="blue cmd" data-cmd="clear">clear</a>
@@ -402,14 +460,15 @@ function createCode(code, text) {
 }
 
 // global command click handler
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async function(e) {
   const link = e.target.closest('a.cmd');
   if (!link) return;
   e.preventDefault();
   stopStartupTyping();
   const cmd = link.getAttribute('data-cmd');
   if (cmd === 'help') helpClickedEarly = true;
-  handleCommand(cmd);
+  await delay(100);
+  handleTypeOfCommand(cmd);
   ensurePromptAtBottom();
 });
 
