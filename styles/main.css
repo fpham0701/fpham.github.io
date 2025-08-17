@@ -61,6 +61,35 @@ body {
 }
 
 /*
+  ==== walking duck background ====
+*/
+body::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 160vw;
+  height: 160vh;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('../img/walking-duck.gif');
+  background-repeat: repeat;
+  background-size: 360px 365px;
+  opacity: 0.08;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  transform-origin: center;
+  background-position: -20vw -20vh;
+  animation: duck-walk 40s linear infinite;
+  will-change: background-position;
+}
+
+@keyframes duck-walk {
+  0% { background-position: -20vw -20vh; }
+  100% { background-position: 120vw 120vh; }
+}
+
+
+/*
   ===== Terminal Window =====
   Main frame, title bar, and traffic light buttons
 */
