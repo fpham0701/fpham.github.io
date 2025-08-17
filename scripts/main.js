@@ -23,37 +23,37 @@ const TITLE_ICON_CLASSES = [
 ];
 
 // get startup text from file
-async function fetchStartupText(){
+async function fetchStartupText() {
     try {
         const res = await fetch(startup.textUrl, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         startup.text = await res.text();
     }
     catch(err) {
-        createText(`<span class="error">Error: failed to load startup text (${err.message}).</span>`)
+        createText(`<span class="error">Error: failed to load startup text (${err.message}).</span>`);
         startup.displayted = true;
     }
 }
 
 // set blink cursor visible
-function setBlinkCursorVisible(visible){
+function setBlinkCursorVisible(visible) {
   const last = app.lastElementChild;
-  if(!last) return;
-  if(visible){
-    if(!last.querySelector('.cursor')){
+  if (!last) return;
+  if (visible) {
+    if (!last.querySelector('.cursor')) {
       const span = document.createElement('span');
       span.className = 'cursor';
       last.appendChild(span);
     }
   } else {
     const c = last.querySelector('.cursor');
-    if(c) c.remove();
+    if (c) c.remove();
   }
 }
 
 // function to interupt startup typing
-function stopStartupTyping(){
-  if(startup.isRunning){
+function stopStartupTyping() {
+  if (startup.isRunning) {
     startup.index = startup.text.length;
   } else {
     startup.displayed = true;
@@ -66,9 +66,9 @@ let lastOutputKey = null;
 let helpClickedEarly = false;
 
 // ensure the input prompt ( > ) is always at the bottom and visible
-function ensurePromptAtBottom(){
+function ensurePromptAtBottom() {
   const existing = document.querySelector('.type');
-  if(existing){
+  if (existing) {
     existing.parentNode.removeChild(existing);
   }
   new_line();
@@ -76,14 +76,14 @@ function ensurePromptAtBottom(){
 }
 
 // set random title icon
-function setRandomTitleIcon(){
+function setRandomTitleIcon() {
   const iconEl = document.querySelector('.menu .title i');
-  if(!iconEl) return;
+  if (!iconEl) return;
   const choice = TITLE_ICON_CLASSES[Math.floor(Math.random() * TITLE_ICON_CLASSES.length)];
   iconEl.className = choice;
 }
 
-async function runStartupTyping(){
+async function runStartupTyping() {
   if (startup.displayed) return;
   startup.isRunning = true;
   const container = document.createElement('p');
@@ -91,7 +91,7 @@ async function runStartupTyping(){
   container.innerHTML = "";
   app.appendChild(container);
   let buffer = "";
-  while(startup.index < startup.text.length){
+  while(startup.index < startup.text.length) {
     const ch = startup.text[startup.index++];
     buffer += ch;
     // render newlines as <br/>
@@ -106,9 +106,9 @@ async function runStartupTyping(){
 }
 
 // Terminal interactions adapted from terminal-style-portfolio-page
-app.addEventListener("keypress", async function(event){
-  if(event.key === "Enter"){
-    if(startup.isRunning){
+app.addEventListener("keypress", async function(event) {
+  if (event.key === "Enter") {
+    if (startup.isRunning) {
       // fast-forward typing
       startup.index = startup.text.length;
       return;
@@ -121,29 +121,29 @@ app.addEventListener("keypress", async function(event){
   }
 });
 
-app.addEventListener("click", function(){
+app.addEventListener("click", function() {
   const input = document.querySelector("input");
-  if(input) input.focus();
+  if (input) input.focus();
 });
 
-document.addEventListener("keydown", function(event){
+document.addEventListener("keydown", function(event) {
   // esc fast-forward startup
-  if(event.key === "Escape" && startup.isRunning){
+  if (event.key === "Escape" && startup.isRunning) {
     startup.index = startup.text.length;
     return;
   }
   // arrow keys terinal scroll
-  if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+  if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
     const step = 30; 
     const maxScrollable = app.scrollHeight > app.clientHeight;
-    if(maxScrollable){
+    if (maxScrollable) {
       event.preventDefault();
       app.scrollTop += (event.key === 'ArrowDown' ? step : -step);
     }
   }
 });
 
-async function open_terminal(){
+async function open_terminal() {
   // Intro quick messages (can be removed if you prefer only the typing file)
   setRandomTitleIcon();
   await delay(250);
@@ -158,7 +158,7 @@ async function open_terminal(){
   await delay(startup.speed);
   
   // after startup finishes, render clickable commands list unless help was clicked early
-  if(!helpClickedEarly){
+  if (!helpClickedEarly) {
     renderCommandsList();
   }
 
@@ -166,7 +166,7 @@ async function open_terminal(){
   ensurePromptAtBottom();
 }
 
-function new_line(){
+function new_line() {
   const p = document.createElement("p");
   p.setAttribute("class", "path");
   const div = document.createElement("div");
@@ -181,10 +181,10 @@ function new_line(){
 }
 
 // ===== terminal resize logic =====
-(function enableResize(){
+(function enableResize() {
   const container = document.querySelector('.container');
   const handle = document.querySelector('.resize-handle');
-  if(!container || !handle) return;
+  if (!container || !handle) return;
 
   let startX = 0;
   let startY = 0;
@@ -192,8 +192,8 @@ function new_line(){
   let startH = 0;
   let isResizing = false;
 
-  function onMouseMove(e){
-    if(!isResizing) return;
+  function onMouseMove(e) {
+    if (!isResizing) return;
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
     const newW = Math.max(320, startW + dx);
@@ -202,8 +202,8 @@ function new_line(){
     container.style.height = newH + 'px';
   }
 
-  function onMouseUp(){
-    if(!isResizing) return;
+  function onMouseUp() {
+    if (!isResizing) return;
     isResizing = false;
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
@@ -222,15 +222,15 @@ function new_line(){
   });
 })();
 
-function removeInput(){
+function removeInput() {
   const div = document.querySelector(".type");
-  if(div) app.removeChild(div);
+  if (div) app.removeChild(div);
 }
 
-async function getInputValue(){
+async function getInputValue() {
   const input = document.querySelector("input");
   const value = input ? input.value.trim() : "";
-  if(value.length === 0){
+  if (value.length === 0) {
     return;
   }
   handleCommand(value);
@@ -242,6 +242,7 @@ async function getInputValue(){
 function help_command() {
   createCode('<a href="#" class="blue cmd" data-cmd="whoami">whoami</a>', "About me.");
   createCode('<a href="#" class="blue cmd" data-cmd="projects">projects</a>', "Check out my projects.");
+  createCode('<a href="#" class="blue cmd" data-cmd="experience">experience</a>', "See my current/past experiences.")
   createCode('<a href="#" class="blue cmd" data-cmd="contact">contact</a>', "Ways to contact me.");
   createCode('<a href="#" class="blue cmd" data-cmd="clear">clear</a>', "Clear the terminal.");
   createCode('<a href="#" class="blue cmd" data-cmd="help">help</a>', "Show this help message.");
@@ -257,14 +258,23 @@ function whoami_command() {
 
 // projects
 function projects_command() {
+  createText("Click on or run any of the following commands to learn more about my projects")
   createText("<a href='https://github.com/fpham0701' target='_blank'><i class='fab fa-github white'></i> github.com/fpham0701</a>");
   lastOutputKey = 'projects';
+}
+
+// experience
+function experience_command() {
+  createCode('<a href="#" class="blue cmd" data-cmd="nvidia2025">NVIDIA</a>', "About me.");
+
+  lastOutputKey = 'experience';
 }
 
 // contact
 function contact_command() {
   createText("<a href='https://github.com/fpham0701' target='_blank'><i class='fab fa-github white'></i> github.com/fpham0701</a>");
   createText("<a href='https://www.linkedin.com/in/francispham-' target='_blank'><i class='fab fa-linkedin-in white'></i> linkedin.com/in/francispham-</a>");
+  createText("<a href='https://www.instagram.com/notfrancispham' target='_blank'><i class='fab fa-instagram'></i> instagram.com/notfrancispham")
   createText("<a href='mailto:fdp25@cornell.edu' target='_blank'><i class='fas fa-envelope white'></i> fdp25@cornell.edu</a>");
   lastOutputKey = 'contact';
 }
@@ -282,10 +292,10 @@ function clear_command() {
 }
 
 // Central command handler (used by keyboard and clickable commands)
-function handleCommand(value){
+function handleCommand(value) {
   delay(startup.speed); 
-  if(value === "help"){
-    if(lastOutputKey === 'help') return;
+  if (value === "help") {
+    if (lastOutputKey === 'help') return;
     trueValue(value);
     help_command();
     lastOutputKey = 'help';
@@ -293,28 +303,35 @@ function handleCommand(value){
     ensurePromptAtBottom();
     return;
   }
-  if(value === "whoami"){
-    if(lastOutputKey === 'whoami') return;
+  if (value === "whoami") {
+    if (lastOutputKey === 'whoami') return;
     trueValue(value);
     whoami_command();
     ensurePromptAtBottom();
     return;
   }
-  if(value === "projects"){
-    if(lastOutputKey === 'projects') return;
+  if (value === "projects") {
+    if (lastOutputKey === 'projects') return;
     trueValue(value);
     projects_command();
     ensurePromptAtBottom();
     return;
   }
-  if(value === "contact"){
-    if(lastOutputKey === 'contact') return;
+  if (value == "experience") {
+    if (lastOutputKey == 'experience') return;
+    trueValue(value)
+    experience_command();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === "contact") {
+    if (lastOutputKey === 'contact') return;
     trueValue(value);
     contact_command();
     ensurePromptAtBottom();
     return;
   }
-  if(value === "clear"){
+  if (value === "clear") {
     clear_command();
     ensurePromptAtBottom();
     return;
@@ -326,13 +343,14 @@ function handleCommand(value){
 }
 
 // clickable command list in blue, appended after startup
-function renderCommandsList(){
-  if(document.querySelector('.commands')) return;
+function renderCommandsList() {
+  if (document.querySelector('.commands')) return;
   const container = document.createElement('p');
   container.className = 'commands';
   container.innerHTML = `Available commands: 
     <a href="#" class="blue cmd" data-cmd="whoami">whoami</a>
     <a href="#" class="blue cmd" data-cmd="projects">projects</a>
+    <a href="#" class="blue cmd" data-cmd="experience">experiences</a>
     <a href="#" class="blue cmd" data-cmd="contact">contact</a>
     <a href="#" class="blue cmd" data-cmd="help">help</a>
     <a href="#" class="blue cmd" data-cmd="clear">clear</a>
@@ -341,7 +359,7 @@ function renderCommandsList(){
 }
 
 // correct command input (green)
-function trueValue(value){
+function trueValue(value) {
   const div = document.createElement("section");
   div.setAttribute("class", "type2");
   const i = document.createElement("i");
@@ -355,7 +373,7 @@ function trueValue(value){
 }
 
 // incorrect command input (red)
-function falseValue(value){
+function falseValue(value) {
   const div = document.createElement("section");
   div.setAttribute("class", "type2");
   const i = document.createElement("i");
@@ -369,29 +387,28 @@ function falseValue(value){
 }
 
 // create text output
-function createText(text){
+function createText(text) {
   const p = document.createElement("p");
   p.innerHTML = text;
   app.appendChild(p);
 }
 
 // create code output
-function createCode(code, text){
+function createCode(code, text) {
   const p = document.createElement("p");
   p.setAttribute("class", "code");
-  p.innerHTML = "${code} <br/><span class='text'> ${text} </span>";
+  p.innerHTML = `${code} <br/><span class='text'> ${text} </span>`;
   app.appendChild(p);
 }
-
 
 // global command click handler
 document.addEventListener('click', (e) => {
   const link = e.target.closest('a.cmd');
-  if(!link) return;
+  if (!link) return;
   e.preventDefault();
   stopStartupTyping();
   const cmd = link.getAttribute('data-cmd');
-  if(cmd === 'help') helpClickedEarly = true;
+  if (cmd === 'help') helpClickedEarly = true;
   handleCommand(cmd);
   ensurePromptAtBottom();
 });
