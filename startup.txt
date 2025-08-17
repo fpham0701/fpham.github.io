@@ -7,4 +7,5 @@ I am a student at Cornell University studying Electrical & Computer Engineering 
 Quick links:
 - <a href="https://github.com/fpham0701" target="_blank"><i class='fab fa-github white'></i> GitHub</a>
 - <a href="https://linkedin.com/in/francispham-" target="_blank"><i class='fab fa-linkedin-in white'></i> LinkedIn</a>
+- <a href='https://www.instagram.com/notfrancispham' target='_blank'><i class='fab fa-instagram'></i> Instagram</a>
 - <a href="mailto:fdp25@cornell.edu" target="_blank"><i class='fas fa-envelope white'></i> Email</a>

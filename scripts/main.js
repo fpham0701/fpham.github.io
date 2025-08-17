@@ -271,8 +271,9 @@ function projects_command() {
 function experience_command() {
   createCode('<a href="#" class="blue cmd" data-cmd="nvidia25">nvidia25</a>', "Summer 2025 Software Engineering Intern at NVIDIA");
   createCode('<a href="#" class="blue cmd" data-cmd="nvidia24">nvidia24</a>', "Summer 2024 Software Engineering Intern at NVIDIA");
-
-
+  createCode('<a href="#" class="blue cmd" data-cmd="capra">capra</a>', "Undergraduate Research Assistant in the Capra research lab at Cornell");
+  createCode('<a href="#" class="blue cmd" data-cmd="ta">ta</a>', "Cornell Engineering Undergraduate Teaching Assistant");
+  createCode('<a href="#" class="blue cmd" data-cmd="zhangrg">zhangrg</a>', "Undergraduate Research Assistant in the Zhang Research Group at Cornell");
   lastOutputKey = 'experience';
 }
 
@@ -280,7 +281,7 @@ function experience_command() {
 function contact_command() {
   createText("<a href='https://github.com/fpham0701' target='_blank'><i class='fab fa-github white'></i> github.com/fpham0701</a>");
   createText("<a href='https://www.linkedin.com/in/francispham-' target='_blank'><i class='fab fa-linkedin-in white'></i> linkedin.com/in/francispham-</a>");
-  createText("<a href='https://www.instagram.com/notfrancispham' target='_blank'><i class='fab fa-instagram'></i> instagram.com/notfrancispham")
+  createText("<a href='https://www.instagram.com/notfrancispham' target='_blank'><i class='fab fa-instagram'></i> instagram.com/notfrancispham</a>")
   createText("<a href='mailto:fdp25@cornell.edu' target='_blank'><i class='fas fa-envelope white'></i> fdp25@cornell.edu</a>");
   lastOutputKey = 'contact';
 }
@@ -303,17 +304,42 @@ function clear_command() {
 // =====================================
 function nvidia25_expCommand() {
   createText("<i class='fas fa-laptop-code'></i> NVIDIA (May 2025 -- Aug 2025):");
-  createText("For this summer at NVIDIA, I worked on creating a LLM-driven, coverage-guided fuzzer used to find bugs in different compiler spaces. \
-              This tool was used by various groups and was helpful in finding errors in development code.")
+  createText("For this summer at NVIDIA, I worked on creating a LLM-driven, coverage-guided fuzzer used to find bugs in different \
+              compiler spaces. This tool was used by various groups and was helpful in finding errors in development code.")
   lastOutputKey = 'nvidia25';
 }
 
-
 function nvidia24_expCommand() {
   createText("<i class='fa-solid fa-computer'></i> NVIDIA (May 2024 -- Aug 2024):");
-  createText("For this summer at NVIDIA, I had the chance to work with the compiler verification team to help integrate the verification flow for MLIR (Multi-Level Intermediate Representation). \
-              I mainly worked on the automated testing pipeline for the NVVM Dialect, in order to collect performance metrics for compilation as well as improved functionality testing.")
+  createText("For this summer at NVIDIA, I had the chance to work with the compiler verification team to help integrate the \
+              verification flow for MLIR (Multi-Level Intermediate Representation). I mainly worked on the automated testing \
+              pipeline for the NVVM Dialect, in order to collect performance metrics for compilation as well as improved \
+              functionality testing.")
   lastOutputKey = 'nvidia24';
+}
+
+function capra_expCommand() {
+  createText("<i class='fa-solid fa-memory'></i> Capra (Sep 2024 -- Present):");
+  createText("I joined <a href='https://capra.cs.cornell.edu/' class='blue' target='_blank'>CAPRA</a>, a research group advised by Professor Adrian Sampson \
+              at Cornell that focuses on computer architecture & programming abstractions. Under Kevin Laeufer, I work on building Protocols, a \
+              Rust-based hardware verification langauge that models RTL.");
+  lastOutputKey = 'capra';
+}
+
+function ta_expCommand() {
+  createText("<i class='fa-solid fa-person-chalkboard'></i> Cornell Engineering Undergraduate Teaching Assistant:");
+  createText("I have been a teaching assistant in Cornell Engineering for several semesters. Here are some of the classes that I have taught:<br> \
+              - ECE 4750 / CS 4420 (Computer Architecture -- FA '25)<br> \
+              - ECE 4271 (Evolutionary Processes, Algorithms, and Games -- SP '25)<br> \
+              - ECE 2100 (Circuits -- FA '23, SP '24, FA '24)");
+  lastOutputKey = 'ta';
+}
+
+function zhangrg_expCommand() {
+  createText("<i class='fa-solid fa-sim-card'></i> Zhang Research Group (Aug 2023 -- Dec 2024):");
+  createText("I joined the <a href='https://zhang.ece.cornell.edu/index.html' class='blue' target='_blank'>Zhang Research Group</a>, advised by Professor \
+              Zhiru Zhang to work on Allo, a programming model for composable accelerator design. For this project, I worked on creating a \
+              benchmark testing suite for verification.")
 }
 
 // ======================================
@@ -371,17 +397,38 @@ function handleCommand(value) {
 
 // experience command handler
 function handleExperienceCommand(value) {
-  if (value == "nvidia25") {
+  if (value === "nvidia25") {
     if (lastOutputKey === 'nvidia25') return;
     trueValue(value);
     nvidia25_expCommand();
     ensurePromptAtBottom();
     return;
   }
-  if (value == "nvidia24") {
+  if (value === "nvidia24") {
     if (lastOutputKey === 'nvidia24') return;
     trueValue(value);
     nvidia24_expCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === "capra") {
+    if (lastOutputKey === 'capra') return;
+    trueValue(value);
+    capra_expCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === "ta") {
+    if (lastOutputKey === 'ta') return;
+    trueValue(value);
+    ta_expCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === "zhangrg") {
+    if (lastOutputKey === 'zhangrg') return;
+    trueValue(value);
+    zhangrg_expCommand();
     ensurePromptAtBottom();
     return;
   }
@@ -467,7 +514,7 @@ document.addEventListener('click', async function(e) {
   stopStartupTyping();
   const cmd = link.getAttribute('data-cmd');
   if (cmd === 'help') helpClickedEarly = true;
-  await delay(100);
+  await delay(125);
   handleTypeOfCommand(cmd);
   ensurePromptAtBottom();
 });
