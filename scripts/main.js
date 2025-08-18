@@ -85,6 +85,7 @@ function setRandomTitleIcon() {
   iconEl.className = choice;
 }
 
+// run the startup text immediately on open
 async function runStartupTyping() {
   if (startup.displayed) return;
   startup.isRunning = true;
@@ -134,7 +135,7 @@ document.addEventListener("keydown", function(event) {
     startup.index = startup.text.length;
     return;
   }
-  // arrow keys terinal scroll
+  // arrow keys terminal scroll
   if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
     const step = 30; 
     const maxScrollable = app.scrollHeight > app.clientHeight;
@@ -255,8 +256,11 @@ function help_command() {
 
 // whoami
 function whoami_command() {
-  createText("Hi, my name is Francis Pham!");
-  createText("I am current 4th year at Cornell University studying Electrical & Computer Engineering and Computer Science.");
+  createText("My name is Francis Pham!");
+  createText("I am current 4th year at Cornell University studying Electrical & Computer Engineering and Computer Science. \
+              My passion involves computer architecture and programming systems. You can find me playing basketball, volleyball, \
+              golfing, or doing random stuff :)");
+
   lastOutputKey = 'whoami';
 }
 
@@ -329,9 +333,9 @@ function capra_expCommand() {
 function ta_expCommand() {
   createText("<i class='fa-solid fa-person-chalkboard'></i> Cornell Engineering Undergraduate Teaching Assistant:");
   createText("I have been a teaching assistant in Cornell Engineering for several semesters. Here are some of the classes that I have taught:<br> \
-              - ECE 4750 / CS 4420 (Computer Architecture -- FA '25)<br> \
-              - ECE 4271 (Evolutionary Processes, Algorithms, and Games -- SP '25)<br> \
-              - ECE 2100 (Circuits -- FA '23, SP '24, FA '24)");
+              - ECE 4750 / CS 4420 (Computer Architecture -- FA'25)<br> \
+              - ECE 4271 (Evolutionary Processes, Algorithms, and Games -- SP'25)<br> \
+              - ECE 2100 (Circuits -- FA'23, SP'24, FA'24)");
   lastOutputKey = 'ta';
 }
 
@@ -397,6 +401,7 @@ function handleCommand(value) {
 
 // experience command handler
 function handleExperienceCommand(value) {
+  if (value === "experience") return;
   if (value === "nvidia25") {
     if (lastOutputKey === 'nvidia25') return;
     trueValue(value);
