@@ -105,6 +105,8 @@ body::before {
   margin: 20px;
   cursor: text;
   position: relative;
+  transform-origin: top center;
+  will-change: transform, opacity, filter;
 }
 
 .menu {
@@ -194,6 +196,30 @@ div.title {
               linear-gradient(135deg, transparent 0 60%, #666 60% 68%, transparent 68% 100%),
               linear-gradient(135deg, transparent 0 75%, #444 75% 82%, transparent 82% 100%);
   opacity: 0.7;
+}
+
+
+/* red button close/open animation */
+.container.hidden {
+  display: none;
+}
+
+@keyframes terminal-close {
+  0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+  100% { transform: scale(0.9) translateY(-14px); opacity: 0; filter: blur(2px); }
+}
+
+@keyframes terminal-open {
+  0% { transform: scale(0.9) translateY(-14px); opacity: 0; filter: blur(2px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+}
+
+.container.closing {
+  animation: terminal-close 220ms ease forwards;
+}
+
+.container.opening {
+  animation: terminal-open 220ms ease forwards;
 }
 
 /*

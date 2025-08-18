@@ -1,4 +1,6 @@
 const app = document.querySelector("#app");
+const terminalContainer = document.querySelector('.container');
+const redBtn = document.querySelector('.button.red');
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 // startup auto-typing 
@@ -525,3 +527,47 @@ document.addEventListener('click', async function(e) {
 });
 
 open_terminal();
+
+// =====================================
+// ========== Button Handlers ==========
+// =====================================
+// red button (close and then open)
+(function enableCloseReopen() {
+  if (!terminalContainer || !redBtn) return;
+
+  let isTransitioning = false;
+
+  function waitForAnimation(element) {
+    return new Promise(resolve => {
+      const onEnd = () => {
+        element.removeEventListener('animationend', onEnd);
+        resolve();
+      };
+      element.addEventListener('animationend', onEnd, { once: true });
+    });
+  }
+
+  async function closeAndReopen(waitMs = 2000) {
+    if (isTransitioning) return; 
+
+    isTransitioning = true;
+    // close animation
+    terminalContainer.classList.remove('opening');
+    terminalContainer.classList.add('closing');
+    await waitForAnimation(terminalContainer);
+    terminalContainer.classList.remove('closing');
+    terminalContainer.classList.add('hidden');
+
+    // delay
+    await delay(waitMs);
+    
+    // open animation
+    terminalContainer.classList.remove('hidden');
+    terminalContainer.classList.add('opening');
+    await waitForAnimation(terminalContainer);
+    terminalContainer.classList.remove('opening');
+    isTransitioning = false;
+  }
+
+  redBtn.addEventListener('click', () => closeAndReopen(2000));
+})();
