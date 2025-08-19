@@ -27,6 +27,12 @@ const TITLE_ICON_CLASSES = [
   'fas fa-headphones',
 ];
 
+// track last printed command to avoid duplicate outputs
+let lastOutputKey = null;
+let experienceClicked = false;
+// track whether help was requested during startup
+let helpClickedEarly = false;
+
 // get startup text from file
 async function fetchStartupText() {
     try {
@@ -50,7 +56,8 @@ function setBlinkCursorVisible(visible) {
       span.className = 'cursor';
       last.appendChild(span);
     }
-  } else {
+  } 
+  else {
     const c = last.querySelector('.cursor');
     if (c) c.remove();
   }
@@ -60,16 +67,11 @@ function setBlinkCursorVisible(visible) {
 function stopStartupTyping() {
   if (startup.isRunning) {
     startup.index = startup.text.length;
-  } else {
+  } 
+  else {
     startup.displayed = true;
   }
 }
-
-// track last printed command to avoid duplicate outputs
-let lastOutputKey = null;
-let experienceClicked = false;
-// track whether help was requested during startup
-let helpClickedEarly = false;
 
 // ensure the input prompt ( > ) is always at the bottom and visible
 function ensurePromptAtBottom() {
@@ -295,15 +297,27 @@ function contact_command() {
 }
 
 // clear
-function clear_command() {
+async function clear_command() {
   document.querySelectorAll("p").forEach(e => e.parentNode.removeChild(e));
   document.querySelectorAll("section").forEach(e => e.parentNode.removeChild(e));
 
   const p = document.createElement("p");
-  p.textContent = "Cleared terminal.";
   app.appendChild(p);
+  let clearText = "Cleared terminal.";
+  let buffer = "";
+  let i = 0;
+  while (i < clearText.length) {
+    const ch = clearText[i++];
+    buffer += ch;
+    p.textContent = buffer.replace(/\n/g, '<br/>');
+    setBlinkCursorVisible(true);
+    await delay(startup.speed * 4);
+  }
   lastOutputKey = null;
+  setBlinkCursorVisible(false);
+  await delay(startup.speed);
   renderCommandsList();
+  ensurePromptAtBottom();
 }
 
 
@@ -347,7 +361,8 @@ function zhangrg_expCommand() {
   createText("<i class='fa-solid fa-sim-card'></i> Zhang Research Group (Aug 2023 -- Dec 2024):");
   createText("I joined the <a href='https://zhang.ece.cornell.edu/index.html' class='blue' target='_blank'>Zhang Research Group</a>, advised by Professor \
               Zhiru Zhang to work on Allo, a programming model for composable accelerator design. For this project, I worked on creating a \
-              benchmark testing suite for verification.")
+              benchmark testing suite for verification.");
+  lastOutputKey = 'zhangrg';
 }
 
 // ======================================
@@ -355,6 +370,10 @@ function zhangrg_expCommand() {
 // ======================================
 // central command handler
 function handleCommand(value) {
+  if (lastOutputKey != 'experience' || value != 'experience') {
+    experienceClicked = false;
+  }
+
   if (value === "help") {
     if (lastOutputKey === 'help') return;
     trueValue(value);
@@ -377,7 +396,7 @@ function handleCommand(value) {
     ensurePromptAtBottom();
     return;
   }
-  if (value == "experience") {
+  if (value === "experience") {
     if (lastOutputKey == 'experience') return;
     trueValue(value);
     experience_command();
@@ -394,7 +413,6 @@ function handleCommand(value) {
   }
   if (value === "clear") {
     clear_command();
-    ensurePromptAtBottom();
     return;
   }
   falseValue(value);
@@ -405,7 +423,7 @@ function handleCommand(value) {
 
 // experience command handler
 function handleExperienceCommand(value) {
-  if (value === "experience") return;
+  if (value === "experience" && lastOutputKey != 'experience') handleCommand(value);
   if (value === "nvidia25") {
     if (lastOutputKey === 'nvidia25') return;
     trueValue(value);
@@ -441,8 +459,6 @@ function handleExperienceCommand(value) {
     ensurePromptAtBottom();
     return;
   }
-
-  experienceClicked = false;
   handleCommand(value);
 }
 
@@ -605,7 +621,8 @@ open_terminal();
     if (((parseInt(w, 10) - 50) < parseInt(cur_w, 10)) && ((parseInt(h, 10) - 25) < parseInt(cur_h, 10))) {
       lastSize = { cur_w: "800px", cur_h: "600px"};
       console.log('does thsi work');
-    } else {
+    } 
+    else {
       lastSize = getCurrentSize();
     }
     setSize(w, h);
@@ -622,7 +639,8 @@ open_terminal();
   greenBtn.addEventListener('click', () => {
     if (!isMaximized) {
       maximize();
-    } else {
+    } 
+    else {
       restore();
     }
   });
