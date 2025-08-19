@@ -153,6 +153,9 @@ div.title {
   color: #9c9c9c;
 }
 
+.menu .title a { cursor: pointer; pointer-events: auto; }
+.menu a { pointer-events: none; }
+
 .buttons-flex {
   position: absolute;
   display: flex;
