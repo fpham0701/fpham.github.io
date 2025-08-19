@@ -97,8 +97,9 @@ body::before {
   display: flex;
   flex-direction: column;
   width: 800px;
-  max-width: 1200px;
   height: 600px;
+  max-width: calc(100vw - 100px);
+  max-height: calc(100vh - 80px);
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid gray;
@@ -107,6 +108,7 @@ body::before {
   position: relative;
   transform-origin: top center;
   will-change: transform, opacity, filter;
+  transition: width 200ms ease, height 200ms ease;
 }
 
 .menu {

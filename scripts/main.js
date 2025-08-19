@@ -1,6 +1,8 @@
 const app = document.querySelector("#app");
 const terminalContainer = document.querySelector('.container');
 const redBtn = document.querySelector('.button.red');
+const yellowBtn = document.querySelector('.button.yellow');
+const greenBtn = document.querySelector('.button.green');
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 // startup auto-typing 
@@ -570,4 +572,58 @@ open_terminal();
   }
 
   redBtn.addEventListener('click', () => closeAndReopen(2000));
+})();
+
+
+// green button (toggle big and small)
+(function toggleSize() {
+  if (!terminalContainer || !greenBtn) return;
+
+  let lastSize = null; // { cur_w: #px, cur_h: #px }
+  let isMaximized = false;
+
+  function getMaxSize() {
+    const computedSytle = window.getComputedStyle(terminalContainer);
+    console.log(computedSytle.maxWidth)
+    console.log(computedSytle.maxHeight)
+    return { w: computedSytle.maxWidth, h: computedSytle.maxHeight };
+  }
+
+  function getCurrentSize() {
+    const rect = terminalContainer.getBoundingClientRect();
+    return { cur_w: rect.width + 'px', cur_h: rect.height + 'px' };
+  }
+
+  function setSize(wPx, hPx) {
+    terminalContainer.style.width = wPx;
+    terminalContainer.style.height = hPx;
+  }
+
+  function maximize() {
+    const { w, h } = getMaxSize();
+    const { cur_w, cur_h } = getCurrentSize();
+    if (((parseInt(w, 10) - 50) < parseInt(cur_w, 10)) && ((parseInt(h, 10) - 25) < parseInt(cur_h, 10))) {
+      lastSize = { cur_w: "800px", cur_h: "600px"};
+      console.log('does thsi work');
+    } else {
+      lastSize = getCurrentSize();
+    }
+    setSize(w, h);
+    isMaximized = true;
+  }   
+
+  function restore() {
+    if (lastSize) {
+      setSize(lastSize.cur_w, lastSize.cur_h);
+    }
+    isMaximized = false;
+  }
+
+  greenBtn.addEventListener('click', () => {
+    if (!isMaximized) {
+      maximize();
+    } else {
+      restore();
+    }
+  });
 })();
