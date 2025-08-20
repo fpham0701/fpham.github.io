@@ -30,6 +30,7 @@ const TITLE_ICON_CLASSES = [
 // track last printed command to avoid duplicate outputs
 let lastOutputKey = null;
 let experienceClicked = false;
+let projectsClicked = false;
 // track whether help was requested during startup
 let helpClickedEarly = false;
 
@@ -132,6 +133,7 @@ app.addEventListener("keypress", async function(event) {
       return;
     }
     handleTypeOfCommand(value);
+    ensurePromptAtBottom();
   }
 });
 
@@ -267,8 +269,11 @@ function whoami_command() {
 
 // projects
 function projects_command() {
-  createText("Click on or run any of the following commands to learn more about my projects")
-  createText("<a href='https://github.com/fpham0701' target='_blank'><i class='fab fa-github white'></i> github.com/fpham0701</a>");
+  createText("Click on or run any of the following commands to learn more about my projects");
+  createCode('<a href="#" class="blue cmd" data-cmd="cuair">cuair</a>', "Cornell University Unmanned Air Systems");
+  createCode('<a href="#" class="blue cmd" data-cmd="bitcoin">bitcoin</a>', "Accelerated Bitcoin Mining Simulation");
+  createCode('<a href="#" class="blue cmd" data-cmd="tinyrv">tinyrv</a>', "Tiny RISC-V Multi-Core Processor");
+  createCode('<a href="#" class="blue cmd" data-cmd="pocamlpoker">pocamlpoker</a>', "Poker Implementation in OCaml");
   lastOutputKey = 'projects';
 }
 
@@ -314,6 +319,42 @@ async function clear_command() {
   await delay(startup.speed);
   renderCommandsList();
   ensurePromptAtBottom();
+}
+
+
+// =====================================
+// ========= Projects Commands =========
+// =====================================
+function cuair_prjCommand() {
+  createText("<a href='https://cuair.org/index.html' class='blue' target='_blank'>Cornell University Unmanned Air Systems (CUAir)</a>")
+  createText("CUAir is project team at Cornell University that specializes in designing, building, and operating a fully autonomous search \
+              and rescue plane. I was part of the Integration and Testing Subteam, working on WLTR, a wing-loading \
+              testing rig. Additionally, I was part of the Imaging Systems Subteam, working on integrating a GoPro Hero11 \
+              for image capture.");
+  lastOutputKey = 'cuair';
+}
+
+function bitcoin_prjCommand() {
+  createText("<a href='https://github.com/fpham0701/hls-bitcoin-miner' class='blue' target='_blank'>Accelerated Bitcoin Mining Simulation</a");
+  createText("As a final project for ECE 6775: High-Level Digital Design Automation, my group and I created a \
+              bitcoing mining simulation that focused on different HLS techniques such as loop tiling/unrolling \
+              as well as array partitioning. We were able to achieve a 6.7x speedup when running the main SHA-256 algorithm on an FPGA.")
+  lastOutputKey = 'bitcoin';
+}
+
+function tinyrv_prjCommand() {
+  createText("<a href='https://github.com/fpham0701/tinyrv' class='blue' target='_blank'>Tiny RISC-V Multicore Processor</a>");
+  createText("For ECE 4750: Computer Architecture, I designed a fully functional processor \
+              based of the a subset of the RISC-V ISA. This included designing an variable-latency multiplier, a fully-bypassed pipeliend \
+              5-stage CPU, direct mapped / 2-way set set-associative caches, and a ring network for multi-core capabilities.")
+  lastOutputKey = 'tinyrv';
+}
+
+function pocamlpoker_prjCommand() {
+  createText("<a href='' class='blue' target='_blank'>pocamlPoker</a>");
+  createText("For CS 3110: Functional Programming, I created a command-line implementation of texas hold'em poker in OCaml. The program has pot betting capabilities and \
+              pretty prints cards. Players take turn looking at their cards and choosing to bet.")
+  lastOutputKey = 'pocamlpoker';
 }
 
 
@@ -369,6 +410,9 @@ function handleCommand(value) {
   if (lastOutputKey != 'experience' || value != 'experience') {
     experienceClicked = false;
   }
+  if (lastOutputKey != 'projects' || value != 'projects') {
+    projectsClicked = false;
+  }
 
   if (value === "help") {
     if (lastOutputKey === 'help') return;
@@ -389,6 +433,7 @@ function handleCommand(value) {
     if (lastOutputKey === 'projects') return;
     trueValue(value);
     projects_command();
+    projectsClicked = true;
     ensurePromptAtBottom();
     return;
   }
@@ -415,6 +460,40 @@ function handleCommand(value) {
   lastOutputKey = null;
   createText(`command not found: ${value}. Type <a href="#" class="blue cmd" data-cmd="help">help</a> to see available commands.`);
   ensurePromptAtBottom();
+}
+
+// projects command handler
+function handleProjectsCommand(value) {
+  if (value === "projects" && lastOutputKey != 'projects') handleCommand(value);
+  if (value === "cuair") {
+    if (lastOutputKey === 'cuair') return;
+    trueValue(value);
+    cuair_prjCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === 'bitcoin') {
+    if (lastOutputKey === 'bitcoin') return;
+    trueValue(value);
+    bitcoin_prjCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === 'tinyrv') {
+    if (lastOutputKey === 'tinyrv') return;
+    trueValue(value);
+    tinyrv_prjCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  if (value === 'pocamlpoker') {
+    if (lastOutputKey === 'pocamlpoker') return;
+    trueValue(value);
+    pocamlpoker_prjCommand();
+    ensurePromptAtBottom();
+    return;
+  }
+  handleCommand(value);
 }
 
 // experience command handler
@@ -462,6 +541,9 @@ function handleExperienceCommand(value) {
 function handleTypeOfCommand(value) {
   if (experienceClicked) {
     handleExperienceCommand(value);
+  }
+  else if (projectsClicked) {
+    handleProjectsCommand(value);
   }
   else {
     handleCommand(value);
