@@ -169,10 +169,9 @@ async function open_terminal() {
   // after startup finishes, render clickable commands list unless help was clicked early
   if (!helpClickedEarly) {
     renderCommandsList();
+    await delay(400);
+    ensurePromptAtBottom();
   }
-
-  await delay(400);
-  ensurePromptAtBottom();
 }
 
 function new_line() {
@@ -591,7 +590,7 @@ open_terminal();
 })();
 
 
-// green button (toggle big and small)
+// green button (toggle maximize)
 (function toggleSize() {
   if (!terminalContainer || !greenBtn) return;
 
@@ -600,8 +599,6 @@ open_terminal();
 
   function getMaxSize() {
     const computedSytle = window.getComputedStyle(terminalContainer);
-    console.log(computedSytle.maxWidth)
-    console.log(computedSytle.maxHeight)
     return { w: computedSytle.maxWidth, h: computedSytle.maxHeight };
   }
 
@@ -620,7 +617,6 @@ open_terminal();
     const { cur_w, cur_h } = getCurrentSize();
     if (((parseInt(w, 10) - 50) < parseInt(cur_w, 10)) && ((parseInt(h, 10) - 25) < parseInt(cur_h, 10))) {
       lastSize = { cur_w: "800px", cur_h: "600px"};
-      console.log('does thsi work');
     } 
     else {
       lastSize = getCurrentSize();
@@ -644,4 +640,13 @@ open_terminal();
       restore();
     }
   });
+})();
+
+// yellow button (clears)
+(function clearBtn() {
+  yellowBtn.addEventListener('click', () => {
+    stopStartupTyping();
+    helpClickedEarly = true;
+    setTimeout(clear_command, 500);
+  })
 })();
