@@ -379,7 +379,7 @@ function nvidia24_expCommand() {
 
 function capra_expCommand() {
   createText("<i class='fa-solid fa-memory'></i> Capra (Sep 2024 -- Present):");
-  createText("I joined <a href='https://capra.cs.cornell.edu/' class='blue' target='_blank'>CAPRA</a>, a research group advised by Professor Adrian Sampson \
+  createText("I joined <a href='https://capra.cs.cornell.edu/' class='blue' target='_blank'>Capra</a>, a research group advised by Professor Adrian Sampson \
               at Cornell that focuses on computer architecture & programming abstractions. Under Kevin Laeufer, I work on building Protocols, a \
               Rust-based hardware verification langauge that models RTL.");
   lastOutputKey = 'capra';
@@ -454,6 +454,14 @@ function handleCommand(value) {
   }
   if (value === "clear") {
     clear_command();
+    return;
+  }
+  if (value === 'resume') {
+    window.open('../resume/fphamResume.pdf');
+    createText('resume updated: 08/19/2025');
+  }
+  if (value === 'quit') {
+    redBtn.click();
     return;
   }
   falseValue(value);
