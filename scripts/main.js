@@ -378,8 +378,8 @@ function nvidia24_expCommand() {
 }
 
 function capra_expCommand() {
-  createText("<i class='fa-solid fa-memory'></i> Capra (Sep 2024 -- Present):");
-  createText("I joined <a href='https://capra.cs.cornell.edu/' class='blue' target='_blank'>Capra</a>, a research group advised by Professor Adrian Sampson \
+  createText("<i class='fa-solid fa-memory'></i> <a href='https://capra.cs.cornell.edu/' class='blue' target='_blank'>Capra</a> (Sep 2024 -- Present):");
+  createText("I joined Capra, a research group advised by Professor Adrian Sampson \
               at Cornell that focuses on computer architecture & programming abstractions. Under Kevin Laeufer, I work on building Protocols, a \
               Rust-based hardware verification langauge that models RTL.");
   lastOutputKey = 'capra';
@@ -395,8 +395,8 @@ function ta_expCommand() {
 }
 
 function zhangrg_expCommand() {
-  createText("<i class='fa-solid fa-sim-card'></i> Zhang Research Group (Aug 2023 -- Dec 2024):");
-  createText("I joined the <a href='https://zhang.ece.cornell.edu/index.html' class='blue' target='_blank'>Zhang Research Group</a>, advised by Professor \
+  createText("<i class='fa-solid fa-sim-card'></i> <a href='https://zhang.ece.cornell.edu/index.html' class='blue' target='_blank'>Zhang Research Group</a> (Aug 2023 -- Dec 2024):");
+  createText("I joined the Zhang Research Group, advised by Professor \
               Zhiru Zhang to work on Allo, a programming model for composable accelerator design. For this project, I worked on creating a \
               benchmark testing suite for verification.");
   lastOutputKey = 'zhangrg';
