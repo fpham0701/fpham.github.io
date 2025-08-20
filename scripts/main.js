@@ -114,7 +114,7 @@ async function runStartupTyping() {
   startup.isRunning = false;
 }
 
-// Terminal interactions adapted from terminal-style-portfolio-page
+// terminal interactions
 app.addEventListener("keypress", async function(event) {
   if (event.key === "Enter") {
     if (startup.isRunning) {
@@ -123,10 +123,15 @@ app.addEventListener("keypress", async function(event) {
       return;
     }
     await delay(150);
-    getInputValue();
+    const input = document.querySelector("input");
+    const value = input ? input.value.trim() : "";
     removeInput();
     await delay(150);
-    new_line();
+    if (value.length === 0) {
+      new_line(); 
+      return;
+    }
+    handleTypeOfCommand(value);
   }
 });
 
@@ -235,15 +240,6 @@ function removeInput() {
   if (div) app.removeChild(div);
 }
 
-async function getInputValue() {
-  const input = document.querySelector("input");
-  const value = input ? input.value.trim() : "";
-  if (value.length === 0) {
-    return;
-  }
-  handleTypeOfCommand(value);
-}
-
 
 // ======================================
 // ===== Available General Commands =====
@@ -297,6 +293,7 @@ function contact_command() {
 
 // clear
 async function clear_command() {
+  removeInput();
   document.querySelectorAll("p").forEach(e => e.parentNode.removeChild(e));
   document.querySelectorAll("section").forEach(e => e.parentNode.removeChild(e));
 
@@ -540,7 +537,6 @@ document.addEventListener('click', async function(e) {
   if (cmd === 'help') helpClickedEarly = true;
   await delay(125);
   handleTypeOfCommand(cmd);
-  ensurePromptAtBottom();
 });
 
 open_terminal();
