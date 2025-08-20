@@ -351,7 +351,7 @@ function tinyrv_prjCommand() {
 }
 
 function pocamlpoker_prjCommand() {
-  createText("<a href='' class='blue' target='_blank'>pocamlPoker</a>");
+  createText("<a href='https://github.com/fpham0701/pocamlPoker' class='blue' target='_blank'>pocamlPoker</a>");
   createText("For CS 3110: Functional Programming, I created a command-line implementation of texas hold'em poker in OCaml. The program has pot betting capabilities and \
               pretty prints cards. Players take turn looking at their cards and choosing to bet.")
   lastOutputKey = 'pocamlpoker';
